@@ -1,200 +1,1846 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CONTROL CIP - Prueba de Login</title>
+  <base target="_top">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1">
+
+  <title>CONTROL CIP</title>
+
   <style>
-    * { box-sizing: border-box; }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       font-family: Arial, sans-serif;
       background: #f2f4f7;
+      margin: 0;
+      padding: 15px;
+      color: #222;
     }
+
     .contenedor {
-      width: min(92%, 400px);
-      background: white;
-      padding: 30px 25px;
-      border-radius: 16px;
-      box-shadow: 0 5px 25px rgba(0,0,0,.12);
+      max-width: 760px;
+      margin: auto;
     }
+
+    .tarjeta {
+      background: white;
+      padding: 20px;
+      border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.12);
+      margin-top: 20px;
+    }
+
     h1 {
       text-align: center;
-      margin: 0 0 8px;
+      margin: 5px 0 20px 0;
       font-size: 28px;
     }
-    .subtitulo {
+
+    h2 {
       text-align: center;
-      color: #666;
-      margin-bottom: 25px;
+      margin-top: 5px;
     }
+
+    h3 {
+      margin-top: 0;
+    }
+
     label {
       display: block;
-      margin: 14px 0 6px;
       font-weight: bold;
+      margin-top: 14px;
     }
-    input {
-      width: 100%;
-      padding: 13px;
-      border: 1px solid #ccc;
-      border-radius: 9px;
-      font-size: 16px;
-    }
+
+    input,
+    select,
     button {
       width: 100%;
-      margin-top: 22px;
-      padding: 14px;
-      border: 0;
-      border-radius: 9px;
-      font-size: 17px;
+      box-sizing: border-box;
+      padding: 12px;
+      margin-top: 6px;
+      border-radius: 8px;
+      border: 1px solid #bbb;
+      font-size: 16px;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: #1976d2;
+      box-shadow: 0 0 0 2px rgba(25,118,210,.12);
+    }
+
+    button {
+      margin-top: 20px;
+      background: #1976d2;
+      color: white;
+      border: none;
       font-weight: bold;
       cursor: pointer;
     }
-    #btnIngresar { background: #222; color: white; }
-    #btnIngresar:disabled { opacity: .6; cursor: wait; }
-    #mensaje {
-      margin-top: 18px;
+
+    button:hover {
+      opacity: .92;
+    }
+
+    button:disabled {
+      background: #999;
+      cursor: not-allowed;
+      opacity: .8;
+    }
+
+    .botonAdmin {
+      background: #333;
+      margin-top: 10px;
+    }
+
+    .botonSalir {
+      background: #d32f2f;
+      margin-top: 10px;
+    }
+
+    .botonSecundario {
+      background: #607d8b;
+    }
+
+    .botonGuardar {
+      background: #1976d2;
+    }
+
+    .botonEliminar {
+      background: #d32f2f;
+      margin-top: 5px;
+      padding: 8px;
+      font-size: 13px;
+    }
+
+    .botonEditar {
+      background: #f57c00;
+      margin-top: 5px;
+      padding: 8px;
+      font-size: 13px;
+    }
+
+    .turno {
+      margin-top: 15px;
       padding: 12px;
+      background: #eef5ff;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .mensaje {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+      line-height: 1.5;
+    }
+
+    .mensajeExito {
+      color: #188038;
+    }
+
+    .mensajeError {
+      color: #c62828;
+    }
+
+    .mensajeAviso {
+      color: #e65100;
+    }
+
+    .resultado {
+      margin-top: 15px;
+      padding: 15px;
+      background: #eefbf1;
       border-radius: 8px;
       display: none;
+      line-height: 1.8;
+    }
+
+    .resultado strong {
+      display: inline-block;
+      min-width: 150px;
+    }
+
+    .usuarioActivo {
+      background: #eef5ff;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .nota {
+      margin-top: 15px;
+      font-size: 13px;
+      color: #666;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .oculto {
+      display: none !important;
+    }
+
+    /* =========================================
+       ADMINISTRACIÓN
+       ========================================= */
+
+    .adminCabecera {
+      background: #333;
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
       text-align: center;
     }
-    .ok { background: #e8f5e9; color: #176b2c; }
-    .error { background: #ffebee; color: #b71c1c; }
-    #resultado {
-      display: none;
-      margin-top: 22px;
-      padding: 15px;
-      background: #f5f5f5;
-      border-radius: 10px;
+
+    .adminCabecera h2 {
+      margin: 0;
     }
+
+    .adminSeccion {
+      background: #f8f9fa;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 15px;
+    }
+
+    .adminSeccion h3 {
+      margin-bottom: 10px;
+    }
+
+    .tablaContenedor {
+      width: 100%;
+      overflow-x: auto;
+      margin-top: 15px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+      background: white;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    th {
+      background: #333;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background: #f7f7f7;
+    }
+
+    .estadoActivo {
+      color: #188038;
+      font-weight: bold;
+    }
+
+    .estadoInactivo {
+      color: #c62828;
+      font-weight: bold;
+    }
+
+    .acciones {
+      min-width: 130px;
+    }
+
+    .modalFondo {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 520px;
+      max-height: 92vh;
+      overflow-y: auto;
+      background: white;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 5px 25px rgba(0,0,0,.3);
+    }
+
+    .modal h2 {
+      margin-top: 0;
+    }
+
+    .modalBotones {
+      display: flex;
+      gap: 10px;
+    }
+
+    .modalBotones button {
+      flex: 1;
+    }
+
+    .botonCancelar {
+      background: #757575;
+    }
+
+    .cargando {
+      text-align: center;
+      padding: 20px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .separador {
+      height: 1px;
+      background: #ddd;
+      margin: 20px 0;
+    }
+
+    @media (max-width: 600px) {
+
+      body {
+        padding: 8px;
+      }
+
+      .tarjeta {
+        padding: 15px;
+        margin-top: 10px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .modalBotones {
+        flex-direction: column;
+      }
+
+    }
+
   </style>
 </head>
 
 <body>
 
 <div class="contenedor">
-  <h1>CONTROL CIP</h1>
-  <div class="subtitulo">Prueba de acceso</div>
 
-  <label for="usuario">Usuario</label>
-  <input id="usuario" type="text" autocomplete="username" placeholder="Ingrese usuario">
+  <!-- =====================================================
+       LOGIN
+       ===================================================== -->
 
-  <label for="contraseña">Contraseña</label>
-  <input id="contraseña" type="password" autocomplete="current-password" placeholder="Ingrese contraseña">
+  <div id="pantallaLogin" class="tarjeta">
 
-  <button id="btnIngresar" onclick="iniciarSesion()">INGRESAR</button>
+    <h1>🔐 CONTROL CIP</h1>
 
-  <div id="mensaje"></div>
+    <h2>Iniciar sesión</h2>
 
-  <div id="resultado">
-    <strong>Acceso correcto</strong>
-    <div id="datosUsuario" style="margin-top:8px;"></div>
+    <label for="usuarioLogin">
+      Usuario
+    </label>
+
+    <input
+      type="text"
+      id="usuarioLogin"
+      placeholder="Ingrese usuario"
+      autocomplete="username">
+
+    <label for="contraseñaLogin">
+      Contraseña
+    </label>
+
+    <input
+      type="password"
+      id="contraseñaLogin"
+      placeholder="Ingrese contraseña"
+      autocomplete="current-password">
+
+    <button
+      id="btnLogin"
+      onclick="iniciarSesion()">
+
+      INGRESAR
+
+    </button>
+
+    <div
+      class="mensaje"
+      id="mensajeLogin">
+    </div>
+
   </div>
+
+
+  <!-- =====================================================
+       APLICACIÓN PRINCIPAL
+       ===================================================== -->
+
+  <div
+    id="pantallaApp"
+    class="oculto">
+
+    <div class="tarjeta">
+
+      <h1>CONTROL CIP</h1>
+
+      <div class="usuarioActivo">
+
+        👤 Usuario:
+        <strong id="nombreUsuario"></strong>
+
+        <br>
+
+        Rol:
+        <strong id="rolUsuario"></strong>
+
+      </div>
+
+
+      <!-- BOTÓN ADMINISTRACIÓN -->
+
+      <button
+        id="btnAdministracion"
+        class="botonAdmin oculto"
+        onclick="abrirAdministracion()">
+
+        ⚙️ ADMINISTRACIÓN DE USUARIOS
+
+      </button>
+
+
+      <!-- =================================================
+           FORMULARIO CIP
+           ================================================= -->
+
+      <label for="fecha">
+        Fecha
+      </label>
+
+      <input
+        type="date"
+        id="fecha">
+
+
+      <label for="hora">
+        Hora
+      </label>
+
+      <input
+        type="time"
+        id="hora"
+        onchange="calcularTurno()">
+
+
+      <div class="turno">
+
+        Turno:
+        <span id="turno">---</span>
+
+      </div>
+
+
+      <label for="estacion">
+        Estación / CIP
+      </label>
+
+      <select id="estacion">
+
+        <option value="">
+          Seleccione
+        </option>
+
+      </select>
+
+
+      <label for="equipo">
+        Línea o equipo
+      </label>
+
+      <select id="equipo">
+
+        <option value="">
+          Seleccione equipo
+        </option>
+
+      </select>
+
+
+      <label for="tipo">
+        Tipo de CIP
+      </label>
+
+      <select id="tipo">
+
+        <option value="">
+          Seleccione tipo de CIP
+        </option>
+
+      </select>
+
+
+      <label for="lectura">
+        Lectura inicial
+      </label>
+
+      <input
+        type="number"
+        id="lectura"
+        placeholder="Ejemplo: 10725480"
+        min="0"
+        step="1">
+
+
+      <button
+        id="btnGuardar"
+        onclick="guardarCIP()">
+
+        GUARDAR CIP
+
+      </button>
+
+
+      <div
+        class="mensaje"
+        id="mensaje">
+      </div>
+
+
+      <!-- RESULTADO -->
+
+      <div
+        class="resultado"
+        id="resultado">
+
+        <div>
+          <strong>Ubicación:</strong>
+          <span id="resultadoUbicacion">---</span>
+        </div>
+
+        <div>
+          <strong>Químico:</strong>
+          <span id="resultadoQuimico">---</span>
+        </div>
+
+        <div>
+          <strong>Turno:</strong>
+          <span id="resultadoTurno">---</span>
+        </div>
+
+      </div>
+
+
+      <div class="nota">
+
+        El consumo, cierre del CIP y cálculo de
+        <strong>CONSUMO AGUA(M3)-NANO1.2</strong>
+        se realizan automáticamente.
+
+      </div>
+
+
+      <button
+        class="botonSalir"
+        onclick="cerrarSesion()">
+
+        CERRAR SESIÓN
+
+      </button>
+
+    </div>
+
+  </div>
+
 </div>
 
-<script>
-  // URL DE LA API - COPIA DE CONTROL CIP
-  const API_URL =
-    "https://script.google.com/macros/s/AKfycbyiKI05gX4XKcoZU59fLUzKwxryBTXK0KmCr8ZfgkHlp8BAIZYasaRKWQlTqs3Oe26y9A/exec";
 
-  function mostrarMensaje(texto, tipo) {
-    const caja = document.getElementById("mensaje");
-    caja.textContent = texto;
-    caja.className = tipo;
-    caja.style.display = "block";
+<!-- =====================================================
+     PANEL ADMINISTRACIÓN
+     ===================================================== -->
+
+<div
+  id="pantallaAdministracion"
+  class="modalFondo oculto">
+
+  <div class="modal">
+
+    <div class="adminCabecera">
+
+      <h2>
+        ⚙️ ADMINISTRACIÓN
+      </h2>
+
+      <div>
+        Gestión de usuarios
+      </div>
+
+    </div>
+
+
+    <!-- FORMULARIO USUARIO -->
+
+    <div class="adminSeccion">
+
+      <h3 id="tituloFormularioUsuario">
+        👤 Nuevo usuario
+      </h3>
+
+      <input
+        type="hidden"
+        id="usuarioId">
+
+
+      <label for="adminUsuario">
+        Usuario
+      </label>
+
+      <input
+        type="text"
+        id="adminUsuario"
+        placeholder="Nombre de usuario">
+
+
+      <label for="adminNombre">
+        Nombre
+      </label>
+
+      <input
+        type="text"
+        id="adminNombre"
+        placeholder="Nombre completo">
+
+
+      <label for="adminContraseña">
+        Contraseña
+      </label>
+
+      <input
+        type="password"
+        id="adminContraseña"
+        placeholder="Contraseña">
+
+
+      <label for="adminRol">
+        Rol
+      </label>
+
+      <select id="adminRol">
+
+        <option value="USUARIO">
+          USUARIO
+        </option>
+
+        <option value="ADMIN">
+          ADMIN
+        </option>
+
+      </select>
+
+
+      <label for="adminEstado">
+        Estado
+      </label>
+
+      <select id="adminEstado">
+
+        <option value="ACTIVO">
+          ACTIVO
+        </option>
+
+        <option value="INACTIVO">
+          INACTIVO
+        </option>
+
+      </select>
+
+
+      <button
+        class="botonGuardar"
+        id="btnGuardarUsuario"
+        onclick="guardarUsuario()">
+
+        GUARDAR USUARIO
+
+      </button>
+
+
+      <button
+        class="botonSecundario"
+        id="btnCancelarEdicion"
+        onclick="cancelarEdicionUsuario()">
+
+        LIMPIAR FORMULARIO
+
+      </button>
+
+
+      <div
+        id="mensajeAdmin"
+        class="mensaje">
+      </div>
+
+    </div>
+
+
+    <!-- LISTA DE USUARIOS -->
+
+    <div class="adminSeccion">
+
+      <h3>
+        📋 Usuarios registrados
+      </h3>
+
+      <button
+        class="botonSecundario"
+        onclick="cargarUsuarios()">
+
+        🔄 ACTUALIZAR LISTA
+
+      </button>
+
+
+      <div
+        id="cargandoUsuarios"
+        class="cargando oculto">
+
+        Cargando usuarios...
+
+      </div>
+
+
+      <div
+        class="tablaContenedor">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>ID</th>
+              <th>Usuario</th>
+              <th>Nombre</th>
+              <th>Rol</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody id="tablaUsuarios">
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+
+    <!-- CERRAR -->
+
+    <div class="modalBotones">
+
+      <button
+        class="botonCancelar"
+        onclick="cerrarAdministracion()">
+
+        CERRAR
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   VARIABLES
+   ========================================================= */
+
+let usuarioActual = null;
+
+let usuariosAdmin = [];
+
+let editandoUsuario = false;
+
+
+/* =========================================================
+   INICIO
+   ========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+
+    mostrarLogin();
+
+    document
+      .getElementById("usuarioLogin")
+      .addEventListener(
+        "keydown",
+        function(event) {
+
+          if (event.key === "Enter") {
+            iniciarSesion();
+          }
+
+        }
+      );
+
+
+    document
+      .getElementById("contraseñaLogin")
+      .addEventListener(
+        "keydown",
+        function(event) {
+
+          if (event.key === "Enter") {
+            iniciarSesion();
+          }
+
+        }
+      );
+
+  }
+);
+
+
+/* =========================================================
+   CONEXIÓN API - CLOUDFLARE
+   ========================================================= */
+
+const API_URL = "https://control-cip-api.ccar57825.workers.dev/";
+
+async function apiRequest(accion, datos = {}, metodo = "POST") {
+  let url = API_URL;
+  const opciones = {
+    method: metodo,
+    headers: { "Content-Type": "application/json" }
+  };
+
+  if (metodo === "GET") {
+    const params = new URLSearchParams({ accion });
+    Object.keys(datos).forEach(k => {
+      if (datos[k] !== undefined && datos[k] !== null) params.set(k, String(datos[k]));
+    });
+    url += "?" + params.toString();
+    delete opciones.headers;
+  } else {
+    opciones.body = JSON.stringify({ accion, ...datos });
   }
 
-  async function iniciarSesion() {
+  const respuesta = await fetch(url, opciones);
+  const texto = await respuesta.text();
+  let resultado;
+  try { resultado = JSON.parse(texto); }
+  catch (_) { throw new Error("Respuesta no válida del servidor."); }
+  if (!respuesta.ok) throw new Error(resultado.mensaje || "Error de conexión.");
+  return resultado;
+}
 
-    const usuario =
-      document.getElementById("usuario").value.trim();
+/* =========================================================
+   MOSTRAR LOGIN
+   ========================================================= */
 
-    const contraseña =
-      document.getElementById("contraseña").value;
+function mostrarLogin() {
 
-    const boton =
-      document.getElementById("btnIngresar");
+  document
+    .getElementById("pantallaLogin")
+    .classList.remove("oculto");
 
-    document.getElementById("resultado").style.display = "none";
 
-    if (!usuario || !contraseña) {
-      mostrarMensaje(
-        "Ingrese usuario y contraseña.",
-        "error"
-      );
-      return;
-    }
+  document
+    .getElementById("pantallaApp")
+    .classList.add("oculto");
 
-    boton.disabled = true;
-    boton.textContent = "VERIFICANDO...";
-    mostrarMensaje("Conectando con CONTROL CIP...", "ok");
 
-    try {
+  document
+    .getElementById("pantallaAdministracion")
+    .classList.add("oculto");
 
-      const respuesta = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "text/plain;charset=utf-8"
-        },
-        body: JSON.stringify({
-          accion: "login",
-          usuario: usuario,
-          contraseña: contraseña
-        })
-      });
+}
 
-      const resultado = await respuesta.json();
 
-      if (resultado.ok) {
+/* =========================================================
+   INICIAR SESIÓN
+   ========================================================= */
 
-        mostrarMensaje(
-          resultado.mensaje || "Acceso correcto.",
-          "ok"
-        );
+function iniciarSesion() {
 
-        document.getElementById("resultado").style.display = "block";
+  const usuario = document.getElementById("usuarioLogin").value.trim();
+  const contraseña = document.getElementById("contraseñaLogin").value;
+  const mensaje = document.getElementById("mensajeLogin");
+  const boton = document.getElementById("btnLogin");
 
-        document.getElementById("datosUsuario").textContent =
-          "Usuario: " + (resultado.usuario || usuario) +
-          " | Nombre: " + (resultado.nombre || "") +
-          " | Rol: " + (resultado.rol || "");
+  if (!usuario || !contraseña) {
+    mensaje.className = "mensaje mensajeAviso";
+    mensaje.textContent = "⚠️ Ingrese usuario y contraseña.";
+    return;
+  }
 
-      } else {
+  boton.disabled = true;
+  boton.textContent = "VERIFICANDO...";
+  mensaje.textContent = "";
 
-        mostrarMensaje(
-          resultado.mensaje ||
-          "Usuario o contraseña incorrectos.",
-          "error"
-        );
-
+  apiRequest("login", { usuario, contraseña })
+    .then(function(resultado) {
+      if (!resultado || !resultado.ok) {
+        mensaje.className = "mensaje mensajeError";
+        mensaje.textContent = "❌ " + (resultado && resultado.mensaje ? resultado.mensaje : "Usuario o contraseña incorrectos.");
+        boton.disabled = false;
+        boton.textContent = "INGRESAR";
+        return;
       }
 
-    } catch (error) {
+      usuarioActual = { usuario: resultado.usuario, nombre: resultado.nombre, rol: resultado.rol };
+      document.getElementById("nombreUsuario").textContent = resultado.nombre || resultado.usuario;
+      document.getElementById("rolUsuario").textContent = resultado.rol;
 
-      mostrarMensaje(
-        "No se pudo conectar con CONTROL CIP. " +
-        "Detalle: " + error.message,
-        "error"
-      );
+      const btnAdmin = document.getElementById("btnAdministracion");
+      if (resultado.rol && String(resultado.rol).toUpperCase() === "ADMIN") btnAdmin.classList.remove("oculto");
+      else btnAdmin.classList.add("oculto");
 
-    } finally {
-
+      document.getElementById("pantallaLogin").classList.add("oculto");
+      document.getElementById("pantallaApp").classList.remove("oculto");
       boton.disabled = false;
       boton.textContent = "INGRESAR";
+      prepararFormulario();
+    })
+    .catch(function(error) {
+      mensaje.className = "mensaje mensajeError";
+      mensaje.textContent = "❌ No se pudo conectar con CONTROL CIP. Detalle: " + (error && error.message ? error.message : error);
+      boton.disabled = false;
+      boton.textContent = "INGRESAR";
+    });
+}
 
-    }
+
+/* =========================================================
+   PREPARAR FORMULARIO
+   ========================================================= */
+
+function prepararFormulario() {
+
+  const ahora =
+    new Date();
+
+
+  const año =
+    ahora.getFullYear();
+
+
+  const mes =
+    String(
+      ahora.getMonth() + 1
+    ).padStart(2, "0");
+
+
+  const dia =
+    String(
+      ahora.getDate()
+    ).padStart(2, "0");
+
+
+  const horas =
+    String(
+      ahora.getHours()
+    ).padStart(2, "0");
+
+
+  const minutos =
+    String(
+      ahora.getMinutes()
+    ).padStart(2, "0");
+
+
+  document
+    .getElementById("fecha")
+    .value =
+    año + "-" +
+    mes + "-" +
+    dia;
+
+
+  document
+    .getElementById("hora")
+    .value =
+    horas + ":" +
+    minutos;
+
+
+  calcularTurno();
+
+  cargarDatos();
+
+}
+
+
+/* =========================================================
+   CALCULAR TURNO
+   ========================================================= */
+
+function calcularTurno() {
+
+  const hora =
+    document
+      .getElementById("hora")
+      .value;
+
+
+  if (!hora) {
+
+    document
+      .getElementById("turno")
+      .textContent =
+      "---";
+
+    return;
+
   }
 
-  document.addEventListener("keydown", function(e) {
-    if (e.key === "Enter") {
-      iniciarSesion();
+
+  const partes =
+    hora.split(":");
+
+
+  const h =
+    Number(partes[0]);
+
+
+  const m =
+    Number(partes[1]);
+
+
+  const minutos =
+    h * 60 + m;
+
+
+  let turno;
+
+
+  if (
+    minutos >= 420 &&
+    minutos <= 900
+  ) {
+
+    turno =
+      "Turno 1";
+
+  }
+
+  else if (
+    minutos >= 901 &&
+    minutos <= 1380
+  ) {
+
+    turno =
+      "Turno 2";
+
+  }
+
+  else {
+
+    turno =
+      "Turno 3";
+
+  }
+
+
+  document
+    .getElementById("turno")
+    .textContent =
+    turno;
+
+}
+
+
+/* =========================================================
+   CARGAR LISTAS
+   ========================================================= */
+
+function cargarDatos() {
+  apiRequest("listas", {}, "GET")
+    .then(function(datos) {
+      if (!datos) {
+        mostrarMensaje("mensaje", "❌ No se recibieron las listas.", "error");
+        return;
+      }
+
+      const selectEstacion = document.getElementById("estacion");
+      selectEstacion.innerHTML = '<option value="">Seleccione</option>';
+      (datos.estaciones || []).forEach(function(estacion) {
+        const opcion = document.createElement("option");
+        opcion.value = estacion;
+        opcion.textContent = estacion;
+        selectEstacion.appendChild(opcion);
+      });
+
+      const selectEquipo = document.getElementById("equipo");
+      selectEquipo.innerHTML = '<option value="">Seleccione equipo</option>';
+      (datos.equipos || []).forEach(function(equipo) {
+        const opcion = document.createElement("option");
+        opcion.value = equipo;
+        opcion.textContent = equipo;
+        selectEquipo.appendChild(opcion);
+      });
+
+      const selectTipo = document.getElementById("tipo");
+      selectTipo.innerHTML = '<option value="">Seleccione tipo de CIP</option>';
+      (datos.tipos || []).forEach(function(tipo) {
+        const opcion = document.createElement("option");
+        opcion.value = tipo;
+        opcion.textContent = tipo;
+        selectTipo.appendChild(opcion);
+      });
+    })
+    .catch(function(error) {
+      mostrarMensaje("mensaje", "❌ Error cargando listas: " + (error && error.message ? error.message : error), "error");
+    });
+}
+
+
+/* =========================================================
+   GUARDAR CIP
+   ========================================================= */
+
+function guardarCIP() {
+  if (!usuarioActual) {
+    alert("La sesión no es válida.");
+    mostrarLogin();
+    return;
+  }
+
+  const datos = {
+    fecha: document.getElementById("fecha").value,
+    hora: document.getElementById("hora").value,
+    estacion: document.getElementById("estacion").value,
+    equipo: document.getElementById("equipo").value,
+    tipo: document.getElementById("tipo").value,
+    lecturaInicial: document.getElementById("lectura").value,
+    usuario: usuarioActual.usuario
+  };
+
+  if (!datos.fecha || !datos.hora || !datos.estacion || !datos.equipo || !datos.tipo || datos.lecturaInicial === "") {
+    mostrarMensaje("mensaje", "⚠️ Complete todos los campos.", "aviso");
+    return;
+  }
+
+  const lectura = Number(datos.lecturaInicial);
+  if (isNaN(lectura) || lectura < 0) {
+    mostrarMensaje("mensaje", "⚠️ La lectura inicial no es válida.", "aviso");
+    return;
+  }
+
+  const boton = document.getElementById("btnGuardar");
+  boton.disabled = true;
+  boton.textContent = "GUARDANDO...";
+  document.getElementById("mensaje").textContent = "";
+  document.getElementById("resultado").style.display = "none";
+
+  apiRequest("guardar", { datos })
+    .then(function(resultado) {
+      if (!resultado || !resultado.ok) {
+        mostrarMensaje("mensaje", "❌ " + (resultado && resultado.mensaje ? resultado.mensaje : "No se pudo guardar el registro."), "error");
+        boton.disabled = false;
+        boton.textContent = "GUARDAR CIP";
+        return;
+      }
+
+      mostrarMensaje("mensaje", "✅ " + (resultado.mensaje || "CIP guardado correctamente."), "exito");
+      document.getElementById("resultadoUbicacion").textContent = resultado.ubicacion || "---";
+      document.getElementById("resultadoQuimico").textContent = resultado.quimico || "---";
+      document.getElementById("resultadoTurno").textContent = resultado.turno || "---";
+      document.getElementById("resultado").style.display = "block";
+      document.getElementById("lectura").value = "";
+      document.getElementById("estacion").value = "";
+      document.getElementById("equipo").value = "";
+      document.getElementById("tipo").value = "";
+      boton.disabled = false;
+      boton.textContent = "GUARDAR CIP";
+    })
+    .catch(function(error) {
+      mostrarMensaje("mensaje", "❌ Error al guardar: " + (error && error.message ? error.message : error), "error");
+      boton.disabled = false;
+      boton.textContent = "GUARDAR CIP";
+    });
+}
+
+
+/* =========================================================
+   MOSTRAR MENSAJES
+   ========================================================= */
+
+function mostrarMensaje(
+  id,
+  texto,
+  tipo
+) {
+
+  const elemento =
+    document.getElementById(id);
+
+
+  if (!elemento) {
+    return;
+  }
+
+
+  elemento.className =
+    "mensaje";
+
+
+  if (tipo === "exito") {
+
+    elemento.classList.add(
+      "mensajeExito"
+    );
+
+  }
+
+  else if (tipo === "error") {
+
+    elemento.classList.add(
+      "mensajeError"
+    );
+
+  }
+
+  else if (tipo === "aviso") {
+
+    elemento.classList.add(
+      "mensajeAviso"
+    );
+
+  }
+
+
+  elemento.textContent =
+    texto;
+
+}
+
+
+/* =========================================================
+   ABRIR ADMINISTRACIÓN
+   ========================================================= */
+
+function abrirAdministracion() {
+
+  if (!usuarioActual) {
+
+    alert(
+      "La sesión no es válida."
+    );
+
+    return;
+
+  }
+
+
+  if (
+    String(usuarioActual.rol)
+      .toUpperCase() !== "ADMIN"
+  ) {
+
+    alert(
+      "No tiene permisos de administrador."
+    );
+
+    return;
+
+  }
+
+
+  document
+    .getElementById(
+      "pantallaAdministracion"
+    )
+    .classList
+    .remove("oculto");
+
+
+  cancelarEdicionUsuario();
+
+  cargarUsuarios();
+
+}
+
+
+/* =========================================================
+   CERRAR ADMINISTRACIÓN
+   ========================================================= */
+
+function cerrarAdministracion() {
+
+  document
+    .getElementById(
+      "pantallaAdministracion"
+    )
+    .classList
+    .add("oculto");
+
+
+  cancelarEdicionUsuario();
+
+}
+
+
+/* =========================================================
+   CARGAR USUARIOS
+   ========================================================= */
+
+function cargarUsuarios() {
+  if (!usuarioActual) return;
+  const cargando = document.getElementById("cargandoUsuarios");
+  cargando.classList.remove("oculto");
+
+  apiRequest("usuarios", { usuarioAdmin: usuarioActual.usuario })
+    .then(function(respuesta) {
+      cargando.classList.add("oculto");
+      usuariosAdmin = respuesta && Array.isArray(respuesta.usuarios) ? respuesta.usuarios : [];
+      mostrarUsuarios(usuariosAdmin);
+    })
+    .catch(function(error) {
+      cargando.classList.add("oculto");
+      mostrarMensaje("mensajeAdmin", "❌ Error cargando usuarios: " + (error && error.message ? error.message : error), "error");
+    });
+}
+
+
+/* =========================================================
+   MOSTRAR USUARIOS EN TABLA
+   ========================================================= */
+
+function mostrarUsuarios(
+  usuarios
+) {
+
+  const tabla =
+    document
+      .getElementById(
+        "tablaUsuarios"
+      );
+
+
+  tabla.innerHTML = "";
+
+
+  if (
+    !usuarios ||
+    usuarios.length === 0
+  ) {
+
+    const fila =
+      document
+        .createElement("tr");
+
+
+    fila.innerHTML =
+      '<td colspan="6" style="text-align:center;">' +
+      'No hay usuarios registrados.' +
+      '</td>';
+
+
+    tabla.appendChild(fila);
+
+    return;
+
+  }
+
+
+  usuarios.forEach(
+    function(usuario) {
+
+      const fila =
+        document
+          .createElement("tr");
+
+
+      const estado =
+        String(
+          usuario.estado || ""
+        ).toUpperCase();
+
+
+      const claseEstado =
+        estado === "ACTIVO"
+          ? "estadoActivo"
+          : "estadoInactivo";
+
+
+      fila.innerHTML = `
+
+        <td>
+          ${escapeHtml(usuario.id)}
+        </td>
+
+        <td>
+          ${escapeHtml(usuario.usuario)}
+        </td>
+
+        <td>
+          ${escapeHtml(usuario.nombre)}
+        </td>
+
+        <td>
+          ${escapeHtml(usuario.rol)}
+        </td>
+
+        <td class="${claseEstado}">
+          ${escapeHtml(usuario.estado)}
+        </td>
+
+        <td class="acciones">
+
+          <button
+            class="botonEditar"
+            onclick="editarUsuarioPorId('${escapeHtml(String(usuario.id))}')">
+
+            EDITAR
+
+          </button>
+
+          <button
+            class="botonEliminar"
+            onclick="eliminarUsuarioPorId('${escapeHtml(String(usuario.id))}')">
+
+            ELIMINAR
+
+          </button>
+
+        </td>
+
+      `;
+
+
+      tabla.appendChild(fila);
+
     }
+  );
+
+}
+
+
+/* =========================================================
+   EDITAR USUARIO
+   ========================================================= */
+
+function editarUsuarioPorId(
+  id
+) {
+
+  const usuario =
+    usuariosAdmin.find(
+      function(item) {
+
+        return String(item.id) ===
+          String(id);
+
+      }
+    );
+
+
+  if (!usuario) {
+
+    alert(
+      "No se encontró el usuario."
+    );
+
+    return;
+
+  }
+
+
+  editandoUsuario = true;
+
+
+  document
+    .getElementById(
+      "usuarioId"
+    )
+    .value =
+    usuario.id;
+
+
+  document
+    .getElementById(
+      "adminUsuario"
+    )
+    .value =
+    usuario.usuario || "";
+
+
+  document
+    .getElementById(
+      "adminNombre"
+    )
+    .value =
+    usuario.nombre || "";
+
+
+  document
+    .getElementById(
+      "adminContraseña"
+    )
+    .value =
+    usuario.contraseña || "";
+
+
+  document
+    .getElementById(
+      "adminRol"
+    )
+    .value =
+    usuario.rol || "USUARIO";
+
+
+  document
+    .getElementById(
+      "adminEstado"
+    )
+    .value =
+    usuario.estado || "ACTIVO";
+
+
+  document
+    .getElementById(
+      "tituloFormularioUsuario"
+    )
+    .textContent =
+    "✏️ Editando usuario";
+
+
+  document
+    .getElementById(
+      "btnGuardarUsuario"
+    )
+    .textContent =
+    "ACTUALIZAR USUARIO";
+
+
+  document
+    .getElementById(
+      "mensajeAdmin"
+    )
+    .textContent =
+    "Editando: " +
+    usuario.usuario;
+
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
   });
+
+}
+
+
+/* =========================================================
+   GUARDAR / ACTUALIZAR USUARIO
+   ========================================================= */
+
+function guardarUsuario() {
+  if (!usuarioActual) { alert("La sesión no es válida."); return; }
+
+  const datos = {
+    id: document.getElementById("usuarioId").value,
+    usuario: document.getElementById("adminUsuario").value.trim(),
+    nombre: document.getElementById("adminNombre").value.trim(),
+    contraseña: document.getElementById("adminContraseña").value,
+    rol: document.getElementById("adminRol").value,
+    estado: document.getElementById("adminEstado").value
+  };
+
+  if (!datos.usuario) { mostrarMensaje("mensajeAdmin", "⚠️ Ingrese el usuario.", "aviso"); return; }
+  if (!datos.nombre) { mostrarMensaje("mensajeAdmin", "⚠️ Ingrese el nombre.", "aviso"); return; }
+  if (!datos.contraseña) { mostrarMensaje("mensajeAdmin", "⚠️ Ingrese la contraseña.", "aviso"); return; }
+
+  const boton = document.getElementById("btnGuardarUsuario");
+  boton.disabled = true;
+  boton.textContent = editandoUsuario ? "ACTUALIZANDO..." : "GUARDANDO...";
+
+  apiRequest("guardarUsuario", { usuarioAdmin: usuarioActual.usuario, datos })
+    .then(function(resultado) {
+      if (!resultado || !resultado.ok) {
+        mostrarMensaje("mensajeAdmin", "❌ " + (resultado && resultado.mensaje ? resultado.mensaje : "No se pudo guardar el usuario."), "error");
+        boton.disabled = false;
+        boton.textContent = editandoUsuario ? "ACTUALIZAR USUARIO" : "GUARDAR USUARIO";
+        return;
+      }
+      mostrarMensaje("mensajeAdmin", "✅ " + (resultado.mensaje || "Usuario guardado correctamente."), "exito");
+      cancelarEdicionUsuario();
+      cargarUsuarios();
+    })
+    .catch(function(error) {
+      mostrarMensaje("mensajeAdmin", "❌ Error: " + (error && error.message ? error.message : error), "error");
+      boton.disabled = false;
+      boton.textContent = editandoUsuario ? "ACTUALIZAR USUARIO" : "GUARDAR USUARIO";
+    });
+}
+
+
+/* =========================================================
+   CANCELAR / LIMPIAR EDICIÓN
+   ========================================================= */
+
+function cancelarEdicionUsuario() {
+
+  editandoUsuario = false;
+
+
+  document
+    .getElementById(
+      "usuarioId"
+    )
+    .value = "";
+
+
+  document
+    .getElementById(
+      "adminUsuario"
+    )
+    .value = "";
+
+
+  document
+    .getElementById(
+      "adminNombre"
+    )
+    .value = "";
+
+
+  document
+    .getElementById(
+      "adminContraseña"
+    )
+    .value = "";
+
+
+  document
+    .getElementById(
+      "adminRol"
+    )
+    .value =
+    "USUARIO";
+
+
+  document
+    .getElementById(
+      "adminEstado"
+    )
+    .value =
+    "ACTIVO";
+
+
+  document
+    .getElementById(
+      "tituloFormularioUsuario"
+    )
+    .textContent =
+    "👤 Nuevo usuario";
+
+
+  const boton =
+    document
+      .getElementById(
+        "btnGuardarUsuario"
+      );
+
+
+  boton.disabled = false;
+
+  boton.textContent =
+    "GUARDAR USUARIO";
+
+}
+
+
+/* =========================================================
+   ELIMINAR USUARIO
+   ========================================================= */
+
+function eliminarUsuarioPorId(id) {
+  if (!usuarioActual) return;
+  const usuario = usuariosAdmin.find(function(item) { return String(item.id) === String(id); });
+  if (!usuario) { alert("No se encontró el usuario."); return; }
+  if (String(usuario.usuario).toLowerCase() === String(usuarioActual.usuario).toLowerCase()) {
+    alert("No puede eliminar su propio usuario."); return;
+  }
+  if (!confirm("¿Está seguro de eliminar al usuario " + usuario.usuario + "?")) return;
+
+  apiRequest("eliminarUsuario", { usuarioAdmin: usuarioActual.usuario, id })
+    .then(function(resultado) {
+      if (!resultado || !resultado.ok) {
+        mostrarMensaje("mensajeAdmin", "❌ " + (resultado && resultado.mensaje ? resultado.mensaje : "No se pudo eliminar el usuario."), "error");
+        return;
+      }
+      mostrarMensaje("mensajeAdmin", "✅ " + (resultado.mensaje || "Usuario eliminado."), "exito");
+      cargarUsuarios();
+    })
+    .catch(function(error) {
+      mostrarMensaje("mensajeAdmin", "❌ Error eliminando usuario: " + (error && error.message ? error.message : error), "error");
+    });
+}
+
+
+/* =========================================================
+   ESCAPAR HTML
+   ========================================================= */
+
+function escapeHtml(
+  valor
+) {
+
+  if (
+    valor === null ||
+    valor === undefined
+  ) {
+
+    return "";
+
+  }
+
+
+  return String(valor)
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+/* =========================================================
+   CERRAR SESIÓN
+   ========================================================= */
+
+function cerrarSesion() {
+
+  usuarioActual = null;
+
+  usuariosAdmin = [];
+
+  editandoUsuario = false;
+
+
+  document
+    .getElementById(
+      "usuarioLogin"
+    )
+    .value = "";
+
+
+  document
+    .getElementById(
+      "contraseñaLogin"
+    )
+    .value = "";
+
+
+  document
+    .getElementById(
+      "mensajeLogin"
+    )
+    .textContent = "";
+
+
+  document
+    .getElementById(
+      "mensaje"
+    )
+    .textContent = "";
+
+
+  document
+    .getElementById(
+      "resultado"
+    )
+    .style
+    .display =
+    "none";
+
+
+  document
+    .getElementById(
+      "btnAdministracion"
+    )
+    .classList
+    .add("oculto");
+
+
+  cerrarAdministracion();
+
+  mostrarLogin();
+
+}
+
+
+/* =========================================================
+   CERRAR ADMIN AL HACER CLIC FUERA DEL MODAL
+   ========================================================= */
+
+document.addEventListener(
+  "click",
+  function(event) {
+
+    const fondo =
+      document
+        .getElementById(
+          "pantallaAdministracion"
+        );
+
+
+    if (
+      event.target === fondo
+    ) {
+
+      cerrarAdministracion();
+
+    }
+
+  }
+);
+
 </script>
 
 </body>
