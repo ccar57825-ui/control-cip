@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CONTROL CIP - Prueba de Login</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      background: #f2f4f7;
+    }
+    .contenedor {
+      width: min(92%, 400px);
+      background: white;
+      padding: 30px 25px;
+      border-radius: 16px;
+      box-shadow: 0 5px 25px rgba(0,0,0,.12);
+    }
+    h1 {
+      text-align: center;
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+    .subtitulo {
+      text-align: center;
+      color: #666;
+      margin-bottom: 25px;
+    }
+    label {
+      display: block;
+      margin: 14px 0 6px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ccc;
+      border-radius: 9px;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 14px;
+      border: 0;
+      border-radius: 9px;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #btnIngresar { background: #222; color: white; }
+    #btnIngresar:disabled { opacity: .6; cursor: wait; }
+    #mensaje {
+      margin-top: 18px;
+      padding: 12px;
+      border-radius: 8px;
+      display: none;
+      text-align: center;
+    }
+    .ok { background: #e8f5e9; color: #176b2c; }
+    .error { background: #ffebee; color: #b71c1c; }
+    #resultado {
+      display: none;
+      margin-top: 22px;
+      padding: 15px;
+      background: #f5f5f5;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="contenedor">
+  <h1>CONTROL CIP</h1>
+  <div class="subtitulo">Prueba de acceso</div>
+
+  <label for="usuario">Usuario</label>
+  <input id="usuario" type="text" autocomplete="username" placeholder="Ingrese usuario">
+
+  <label for="contraseña">Contraseña</label>
+  <input id="contraseña" type="password" autocomplete="current-password" placeholder="Ingrese contraseña">
+
+  <button id="btnIngresar" onclick="iniciarSesion()">INGRESAR</button>
+
+  <div id="mensaje"></div>
+
+  <div id="resultado">
+    <strong>Acceso correcto</strong>
+    <div id="datosUsuario" style="margin-top:8px;"></div>
+  </div>
+</div>
+
+<script>
+  // URL DE LA API - COPIA DE CONTROL CIP
+  const API_URL =
+    "https://script.google.com/macros/s/AKfycbyiKI05gX4XKcoZU59fLUzKwxryBTXK0KmCr8ZfgkHlp8BAIZYasaRKWQlTqs3Oe26y9A/exec";
+
+  function mostrarMensaje(texto, tipo) {
+    const caja = document.getElementById("mensaje");
+    caja.textContent = texto;
+    caja.className = tipo;
+    caja.style.display = "block";
+  }
+
+  async function iniciarSesion() {
+
+    const usuario =
+      document.getElementById("usuario").value.trim();
+
+    const contraseña =
+      document.getElementById("contraseña").value;
+
+    const boton =
+      document.getElementById("btnIngresar");
+
+    document.getElementById("resultado").style.display = "none";
+
+    if (!usuario || !contraseña) {
+      mostrarMensaje(
+        "Ingrese usuario y contraseña.",
+        "error"
+      );
+      return;
+    }
+
+    boton.disabled = true;
+    boton.textContent = "VERIFICANDO...";
+    mostrarMensaje("Conectando con CONTROL CIP...", "ok");
+
+    try {
+
+      const respuesta = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify({
+          accion: "login",
+          usuario: usuario,
+          contraseña: contraseña
+        })
+      });
+
+      const resultado = await respuesta.json();
+
+      if (resultado.ok) {
+
+        mostrarMensaje(
+          resultado.mensaje || "Acceso correcto.",
+          "ok"
+        );
+
+        document.getElementById("resultado").style.display = "block";
+
+        document.getElementById("datosUsuario").textContent =
+          "Usuario: " + (resultado.usuario || usuario) +
+          " | Nombre: " + (resultado.nombre || "") +
+          " | Rol: " + (resultado.rol || "");
+
+      } else {
+
+        mostrarMensaje(
+          resultado.mensaje ||
+          "Usuario o contraseña incorrectos.",
+          "error"
+        );
+
+      }
+
+    } catch (error) {
+
+      mostrarMensaje(
+        "No se pudo conectar con CONTROL CIP. " +
+        "Detalle: " + error.message,
+        "error"
+      );
+
+    } finally {
+
+      boton.disabled = false;
+      boton.textContent = "INGRESAR";
+
+    }
+  }
+
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+      iniciarSesion();
+    }
+  });
+</script>
+
+</body>
+</html>
